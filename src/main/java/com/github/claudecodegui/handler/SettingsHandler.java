@@ -666,7 +666,10 @@ public class SettingsHandler extends BaseMessageHandler {
                     callJavaScript("window.showError", escapeJs("获取 Node.js 路径失败: " + e.getMessage()))
                 );
             }
-        }, AppExecutorUtil.getAppExecutorService());
+        }, AppExecutorUtil.getAppExecutorService()).exceptionally(ex -> {
+            LOG.error("[SettingsHandler] Unexpected error in handleGetNodePath: " + ex.getMessage(), ex);
+            return null;
+        });
     }
 
     /**
@@ -764,7 +767,10 @@ public class SettingsHandler extends BaseMessageHandler {
                     callJavaScript("window.showError", escapeJs("保存 Node.js 路径失败: " + e.getMessage()))
                 );
             }
-        }, AppExecutorUtil.getAppExecutorService());
+        }, AppExecutorUtil.getAppExecutorService()).exceptionally(ex -> {
+            LOG.error("[SettingsHandler] Unexpected error in handleSetNodePath: " + ex.getMessage(), ex);
+            return null;
+        });
 
         LOG.debug("[SettingsHandler] ========== handleSetNodePath END (async dispatched) ==========");
     }

@@ -60,13 +60,14 @@ const DependencySection = ({ addToast, isActive }: DependencySectionProps) => {
     }
   }, [installLogs, showLogs]);
 
-  // Setup window callbacks - only run once on mount
+  // Use a ref to track isActive so the mount-only effect can access the latest value
+  const isActiveRef = useRef(isActive);
   useEffect(() => {
-    // Use a safer callback management approach:
-    // 1. Save references to existing callbacks (captured when effect runs)
-    // 2. Create wrapper functions instead of directly overwriting
-    // 3. Restore original callbacks on cleanup
+    isActiveRef.current = isActive;
+  }, [isActive]);
 
+  // Setup window callbacks - run once on mount only
+  useEffect(() => {
     // Capture current callback references (may have been set by App.tsx)
     const savedUpdateDependencyStatus = window.updateDependencyStatus;
     const savedDependencyInstallProgress = window.dependencyInstallProgress;
@@ -76,7 +77,6 @@ const DependencySection = ({ addToast, isActive }: DependencySectionProps) => {
     const savedCheckNodeEnvironment = window.checkNodeEnvironment;
     const savedRunNodeEnvironmentStressTest = window.runNodeEnvironmentStressTest;
 
-    // Create wrapped callback functions
     window.updateDependencyStatus = (jsonStr: string) => {
       try {
         const status = JSON.parse(jsonStr);
@@ -86,11 +86,8 @@ const DependencySection = ({ addToast, isActive }: DependencySectionProps) => {
         console.error('[DependencySection] Failed to parse dependency status:', error);
         setLoading(false);
       }
-      // Chain call: also trigger previously saved callbacks (e.g., from App.tsx)
       if (typeof savedUpdateDependencyStatus === 'function') {
-        try {
-          savedUpdateDependencyStatus(jsonStr);
-        } catch (e) {
+        try { savedUpdateDependencyStatus(jsonStr); } catch (e) {
           console.error('[DependencySection] Error in chained updateDependencyStatus:', e);
         }
       }
@@ -103,11 +100,8 @@ const DependencySection = ({ addToast, isActive }: DependencySectionProps) => {
       } catch (error) {
         console.error('[DependencySection] Failed to parse install progress:', error);
       }
-      // Chain call
       if (typeof savedDependencyInstallProgress === 'function') {
-        try {
-          savedDependencyInstallProgress(jsonStr);
-        } catch (e) {
+        try { savedDependencyInstallProgress(jsonStr); } catch (e) {
           console.error('[DependencySection] Error in chained dependencyInstallProgress:', e);
         }
       }
@@ -131,11 +125,8 @@ const DependencySection = ({ addToast, isActive }: DependencySectionProps) => {
         console.error('[DependencySection] Failed to parse install result:', error);
         setInstallingSdk(null);
       }
-      // Chain call
       if (typeof savedDependencyInstallResult === 'function') {
-        try {
-          savedDependencyInstallResult(jsonStr);
-        } catch (e) {
+        try { savedDependencyInstallResult(jsonStr); } catch (e) {
           console.error('[DependencySection] Error in chained dependencyInstallResult:', e);
         }
       }
@@ -157,11 +148,8 @@ const DependencySection = ({ addToast, isActive }: DependencySectionProps) => {
         console.error('[DependencySection] Failed to parse uninstall result:', error);
         setUninstallingSdk(null);
       }
-      // Chain call
       if (typeof savedDependencyUninstallResult === 'function') {
-        try {
-          savedDependencyUninstallResult(jsonStr);
-        } catch (e) {
+        try { savedDependencyUninstallResult(jsonStr); } catch (e) {
           console.error('[DependencySection] Error in chained dependencyUninstallResult:', e);
         }
       }
@@ -174,11 +162,8 @@ const DependencySection = ({ addToast, isActive }: DependencySectionProps) => {
       } catch (error) {
         console.error('[DependencySection] Failed to parse node environment status:', error);
       }
-      // Chain call
       if (typeof savedNodeEnvironmentStatus === 'function') {
-        try {
-          savedNodeEnvironmentStatus(jsonStr);
-        } catch (e) {
+        try { savedNodeEnvironmentStatus(jsonStr); } catch (e) {
           console.error('[DependencySection] Error in chained nodeEnvironmentStatus:', e);
         }
       }
@@ -198,14 +183,13 @@ const DependencySection = ({ addToast, isActive }: DependencySectionProps) => {
 
     const handleNodePathReady = () => {
       isNodePathReadyRef.current = true;
-      if (isActive) {
+      if (isActiveRef.current) {
         sendToJava('check_node_environment:');
       }
     };
     window.addEventListener('nodePathReady', handleNodePathReady);
 
     return () => {
-      // Restore previously saved callbacks on cleanup to avoid losing other components' callbacks
       window.updateDependencyStatus = savedUpdateDependencyStatus;
       window.dependencyInstallProgress = savedDependencyInstallProgress;
       window.dependencyInstallResult = savedDependencyInstallResult;
@@ -215,8 +199,10 @@ const DependencySection = ({ addToast, isActive }: DependencySectionProps) => {
       window.runNodeEnvironmentStressTest = savedRunNodeEnvironmentStressTest;
       window.removeEventListener('nodePathReady', handleNodePathReady);
     };
-  }, [isActive]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
+  // Fetch data when tab becomes active
   useEffect(() => {
     if (!isActive) {
       return;

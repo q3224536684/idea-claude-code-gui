@@ -14,9 +14,11 @@ import java.util.List;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 /**
  * Node.js detector.
@@ -76,12 +78,14 @@ public class NodeDetector {
 
     /**
      * Reset the singleton instance.
-     * This method is primarily intended for testing purposes to reset
+     * This method is intended for testing purposes only to reset
      * the shared state between test cases.
      *
      * <p>WARNING: Calling this in production code will clear the cached
-     * Node.js path and may cause performance degradation.</p>
+     * Node.js path and may cause performance degradation. All existing
+     * references to the old instance will become stale.</p>
      */
+    @org.jetbrains.annotations.TestOnly
     public static void resetInstance() {
         synchronized (lock) {
             instance = null;
@@ -126,13 +130,21 @@ public class NodeDetector {
 
             NodeDetectionResult result;
             try {
-                result = detectionFuture.join();
+                result = detectionFuture.get(30, TimeUnit.SECONDS);
+            } catch (TimeoutException e) {
+                LOG.warn("[NodeDetector] Detection timed out after 30 seconds, cancelling.");
+                detectionFuture.cancel(true);
+                result = NodeDetectionResult.failure("Node.js 检测超时（30秒）");
             } catch (CancellationException e) {
                 LOG.info("[NodeDetector] In-flight detection was cancelled, retrying once.");
                 result = this.detectNodeWithDetails();
-            } catch (CompletionException e) {
+            } catch (ExecutionException e) {
                 LOG.warn("[NodeDetector] Node detection failed: " + e.getMessage(), e);
                 result = NodeDetectionResult.failure("Node.js 检测异常: " + e.getMessage());
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                LOG.warn("[NodeDetector] Detection interrupted.");
+                result = NodeDetectionResult.failure("Node.js 检测被中断");
             }
 
             synchronized (this.cacheLock) {
@@ -157,8 +169,8 @@ public class NodeDetector {
             }
         } finally {
             long elapsed = System.currentTimeMillis() - startTime;
-            LOG.info("[NodeDetector] findNodeExecutable completed in " + elapsed +
-                     "ms on thread " + Thread.currentThread().getName());
+            LOG.debug("[NodeDetector] findNodeExecutable completed in " + elapsed +
+                      "ms on thread " + Thread.currentThread().getName());
         }
     }
 
@@ -203,8 +215,8 @@ public class NodeDetector {
             return NodeDetectionResult.failure("在所有已知路径中均未找到 Node.js", triedPaths);
         } finally {
             long elapsed = System.currentTimeMillis() - startTime;
-            LOG.info("[NodeDetector] detectNodeWithDetails completed in " + elapsed +
-                     "ms on thread " + Thread.currentThread().getName());
+            LOG.debug("[NodeDetector] detectNodeWithDetails completed in " + elapsed +
+                      "ms on thread " + Thread.currentThread().getName());
         }
     }
 
@@ -522,12 +534,35 @@ public class NodeDetector {
     }
 
     /**
+     * Validates that a given path looks like a Node.js binary.
+     * Prevents executing arbitrary binaries when the path comes from WebView input.
+     *
+     * @param path the path to validate
+     * @return true if the basename is "node" or "node.exe"
+     */
+    private boolean isValidNodeBinaryName(String path) {
+        if (path == null || path.trim().isEmpty()) {
+            return false;
+        }
+        // Allow bare "node" command (fallback case)
+        if ("node".equals(path)) {
+            return true;
+        }
+        String name = new File(path).getName().toLowerCase();
+        return "node".equals(name) || "node.exe".equals(name);
+    }
+
+    /**
      * Verifies whether a Node.js path is usable.
      *
      * @param path Node.js executable path
      * @return version string if usable, otherwise null
      */
     public String verifyNodePath(String path) {
+        if (!isValidNodeBinaryName(path)) {
+            LOG.warn("[NodeDetector] Rejected invalid Node.js binary name: " + path);
+            return null;
+        }
         try {
             ProcessBuilder pb = new ProcessBuilder(path, "--version");
             Process process = pb.start();
@@ -645,9 +680,18 @@ public class NodeDetector {
     /**
      * Sets the executor used for in-flight Node detection tasks.
      * Call this early (e.g. during plugin init) to replace the default ForkJoinPool.
+     * This method is idempotent — the executor is only set once from the default.
+     * Subsequent calls are ignored to avoid races with concurrent detection.
      */
     public void setDetectionExecutor(Executor executor) {
-        this.detectionExecutor = executor;
+        if (executor == null) {
+            return;
+        }
+        synchronized (this.cacheLock) {
+            if (this.detectionExecutor == ForkJoinPool.commonPool()) {
+                this.detectionExecutor = executor;
+            }
+        }
     }
 
     /**

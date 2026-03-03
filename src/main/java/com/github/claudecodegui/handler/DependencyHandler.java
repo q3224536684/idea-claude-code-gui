@@ -35,7 +35,7 @@ public class DependencyHandler extends BaseMessageHandler {
     private final DependencyManager dependencyManager;
     private final Gson gson;
     private final NodeDetector nodeDetector;
-    private volatile boolean lazyInitialized;
+    private volatile CompletableFuture<Void> initFuture;
     private final Object initLock;
 
     public DependencyHandler(HandlerContext context) {
@@ -43,7 +43,7 @@ public class DependencyHandler extends BaseMessageHandler {
         this.nodeDetector = NodeDetector.getInstance();
         this.dependencyManager = new DependencyManager(this.nodeDetector);
         this.gson = new Gson();
-        this.lazyInitialized = false;
+        this.initFuture = null;
         this.initLock = new Object();
     }
 
@@ -95,20 +95,19 @@ public class DependencyHandler extends BaseMessageHandler {
 
     /**
      * Performs deferred Node.js cache warm-up for configured path.
+     * The returned future can be chained on by callers that depend on initialization.
+     * After the first call, subsequent invocations return the same (possibly completed) future.
      */
     private void ensureInitializedAsync() {
-        if (this.lazyInitialized) {
+        if (this.initFuture != null) {
             return;
         }
 
         synchronized (this.initLock) {
-            if (this.lazyInitialized) {
+            if (this.initFuture != null) {
                 return;
             }
-            this.lazyInitialized = true;
-        }
-
-        CompletableFuture.runAsync(() -> {
+            this.initFuture = CompletableFuture.runAsync(() -> {
             try {
                 String configuredNodePath = this.getConfiguredNodePath();
                 if (configuredNodePath == null || configuredNodePath.isEmpty()) {
@@ -126,7 +125,11 @@ public class DependencyHandler extends BaseMessageHandler {
             } catch (Exception e) {
                 LOG.warn("[DependencyHandler] Lazy initialization failed: " + e.getMessage(), e);
             }
-        }, AppExecutorUtil.getAppExecutorService());
+            }, AppExecutorUtil.getAppExecutorService()).exceptionally(ex -> {
+                LOG.error("[DependencyHandler] Unexpected error in ensureInitializedAsync: " + ex.getMessage(), ex);
+                return null;
+            });
+        }
     }
 
     /**
@@ -148,10 +151,13 @@ public class DependencyHandler extends BaseMessageHandler {
                 this.sendShowError("获取依赖状态失败: " + e.getMessage());
             } finally {
                 long elapsed = System.currentTimeMillis() - startTime;
-                LOG.info("[DependencyHandler] handleGetStatus completed in " + elapsed +
-                         "ms on thread " + Thread.currentThread().getName());
+                LOG.debug("[DependencyHandler] handleGetStatus completed in " + elapsed +
+                          "ms on thread " + Thread.currentThread().getName());
             }
-        }, AppExecutorUtil.getAppExecutorService());
+        }, AppExecutorUtil.getAppExecutorService()).exceptionally(ex -> {
+            LOG.error("[DependencyHandler] Unexpected error in handleGetStatus: " + ex.getMessage(), ex);
+            return null;
+        });
     }
 
     /**
@@ -217,7 +223,10 @@ public class DependencyHandler extends BaseMessageHandler {
                     this.sendErrorResult("dependencyInstallResult", e.getMessage());
                     this.sendShowError("依赖安装失败: " + e.getMessage());
                 }
-            }, AppExecutorUtil.getAppExecutorService());
+            }, AppExecutorUtil.getAppExecutorService()).exceptionally(ex -> {
+                LOG.error("[DependencyHandler] Unexpected error in handleInstall: " + ex.getMessage(), ex);
+                return null;
+            });
 
         } catch (Exception e) {
             LOG.error("[DependencyHandler] Failed to install dependency: " + e.getMessage(), e);
@@ -256,7 +265,10 @@ public class DependencyHandler extends BaseMessageHandler {
                     this.sendErrorResult("dependencyUninstallResult", e.getMessage());
                     this.sendShowError("依赖卸载失败: " + e.getMessage());
                 }
-            }, AppExecutorUtil.getAppExecutorService());
+            }, AppExecutorUtil.getAppExecutorService()).exceptionally(ex -> {
+                LOG.error("[DependencyHandler] Unexpected error in handleUninstall: " + ex.getMessage(), ex);
+                return null;
+            });
 
         } catch (Exception e) {
             LOG.error("[DependencyHandler] Failed to uninstall dependency: " + e.getMessage(), e);
@@ -309,7 +321,10 @@ public class DependencyHandler extends BaseMessageHandler {
                     this.sendErrorResult("dependencyUpdateAvailable", e.getMessage());
                     this.sendShowError("检查依赖更新失败: " + e.getMessage());
                 }
-            }, AppExecutorUtil.getAppExecutorService());
+            }, AppExecutorUtil.getAppExecutorService()).exceptionally(ex -> {
+                LOG.error("[DependencyHandler] Unexpected error in handleCheckUpdates: " + ex.getMessage(), ex);
+                return null;
+            });
 
         } catch (Exception e) {
             LOG.error("[DependencyHandler] Failed to check updates: " + e.getMessage(), e);
@@ -385,10 +400,13 @@ public class DependencyHandler extends BaseMessageHandler {
                 this.sendShowError("检查 Node.js 环境失败: " + e.getMessage());
             } finally {
                 long elapsed = System.currentTimeMillis() - startTime;
-                LOG.info("[DependencyHandler] handleCheckNodeEnvironment completed in " + elapsed +
-                         "ms on thread " + Thread.currentThread().getName());
+                LOG.debug("[DependencyHandler] handleCheckNodeEnvironment completed in " + elapsed +
+                          "ms on thread " + Thread.currentThread().getName());
             }
-        }, AppExecutorUtil.getAppExecutorService());
+        }, AppExecutorUtil.getAppExecutorService()).exceptionally(ex -> {
+            LOG.error("[DependencyHandler] Unexpected error in handleCheckNodeEnvironment: " + ex.getMessage(), ex);
+            return null;
+        });
     }
 
     // ==================== Helper Methods ====================

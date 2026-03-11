@@ -309,6 +309,7 @@
       "emptyProvider": "Ningún proveedor configurado",
       "notConfigured": "No configurado",
       "apiKey": "API Key",
+      "apiKeyHelper": "Asistente de clave API",
       "baseUrl": "Base URL",
       "provider": "Proveedor",
       "source": "Fuente",
@@ -1119,9 +1120,9 @@
         "label": "gpt-5.3-codex",
         "description": "Último modelo de codificación agéntico con capacidades mejoradas."
       },
-      "gpt53": {
-        "label": "gpt-5.3",
-        "description": "Último modelo de frontera con mejoras significativas."
+      "gpt54": {
+        "label": "gpt-5.4",
+        "description": "Último modelo de frontera con capacidades mejoradas."
       },
       "gpt52codex": {
         "label": "gpt-5.2-codex",
@@ -1134,10 +1135,6 @@
       "gpt51codexMini": {
         "label": "gpt-5.1-codex-mini",
         "description": "Optimizado para Codex. Más económico y rápido, pero menos capaz."
-      },
-      "gpt52": {
-        "label": "gpt-5.2",
-        "description": "Último modelo de frontera con mejoras en conocimiento."
       }
     }
   },
@@ -1176,8 +1173,8 @@
     },
     "acceptEdits": {
       "label": "Auto Edit",
-      "tooltip": "Codex approval_policy=auto-edit – automatically applies file patches, still asks before shell commands.",
-      "description": "Auto-create and edit files via apply_patch while keeping command approvals."
+      "tooltip": "Codex approval_policy=on-request – asks for approval when needed",
+      "description": "Balanced option. Allows normal editing flow while still requiring approvals when needed."
     },
     "bypassPermissions": {
       "label": "Full Auto",

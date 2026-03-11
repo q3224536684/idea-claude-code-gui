@@ -174,6 +174,18 @@ public class ClaudeChatWindow {
             }
 
             @Override
+            public void clearPermissionDecisionMemory() {
+                try {
+                    if (sessionId != null && !sessionId.isEmpty()) {
+                        PermissionService permissionService = PermissionService.getInstance(project, sessionId);
+                        permissionService.clearDecisionMemory();
+                    }
+                } catch (Exception e) {
+                    LOG.warn("Failed to clear permission decision memory: " + e.getMessage());
+                }
+            }
+
+            @Override
             public void callJavaScript(String fn, String... args) {
                 ClaudeChatWindow.this.callJavaScript(fn, args);
             }
@@ -191,6 +203,13 @@ public class ClaudeChatWindow {
             @Override
             public void setupSessionCallbacks() {
                 ClaudeChatWindow.this.setupSessionCallbacks();
+            }
+
+            @Override
+            public void invalidateSessionCallbacks() {
+                if (sessionCallbackAdapter != null) {
+                    sessionCallbackAdapter.deactivate();
+                }
             }
 
             @Override
@@ -434,6 +453,9 @@ public class ClaudeChatWindow {
     // ==================== Session Delegates ====================
 
     private void setupSessionCallbacks() {
+        if (this.sessionCallbackAdapter != null) {
+            this.sessionCallbackAdapter.deactivate();
+        }
         this.sessionCallbackAdapter = new SessionCallbackAdapter(
                 streamCoalescer,
                 new SessionCallbackAdapter.JsTarget() {

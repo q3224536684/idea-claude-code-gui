@@ -16,9 +16,10 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.intellij.openapi.application.ReadAction;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Computable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -357,7 +358,7 @@ public class ClaudeSession {
     /**
      * Send a message with attachments, agent prompt, file tags, and a requested permission mode.
      * The effective mode is resolved with priority:
-     * requestedPermissionMode > sessionMode > default, with codex forced to bypassPermissions.
+     * Priority: requestedPermissionMode > sessionMode > default.
      */
     public CompletableFuture<Void> send(
             String input,
@@ -508,7 +509,7 @@ public class ClaudeSession {
     }
 
     private String resolveTerminalContent(String safeName) {
-        return ReadAction.compute(() -> {
+        return ApplicationManager.getApplication().runReadAction((Computable<String>) () -> {
             try {
                 List<Object> widgets = TerminalMonitorService.getWidgets(project);
                 LOG.debug("[Terminal] Resolving: " + safeName + ". Available widgets: " + widgets.size());
@@ -542,7 +543,7 @@ public class ClaudeSession {
     }
 
     private String resolveServiceContent(String safeName) {
-        return ReadAction.compute(() -> {
+        return ApplicationManager.getApplication().runReadAction((Computable<String>) () -> {
             try {
                 List<RunConfigMonitorService.RunConfigInfo> configs = RunConfigMonitorService.getRunConfigurations(project);
                 LOG.debug("[Service] Resolving: " + safeName + ". Available configs: " + configs.size());
@@ -965,12 +966,16 @@ public class ClaudeSession {
             LOG.warn("[Streaming] Failed to read streaming config: " + e.getMessage());
         }
 
-        final String previousSessionId = state.getSessionId();
+        final String runtimeSessionEpoch = state.getRuntimeSessionEpoch();
+        LOG.info("[Lifecycle] sendToClaude sessionId=" + (state.getSessionId() != null ? state.getSessionId() : "(new)")
+                + ", epoch=" + runtimeSessionEpoch
+                + ", cwd=" + state.getCwd());
 
         return claudeSDKBridge.sendMessage(
                         channelId,
                         input,
                         state.getSessionId(),
+                        runtimeSessionEpoch,
                         state.getCwd(),
                         attachments,
                         effectivePermissionMode,
@@ -978,6 +983,7 @@ public class ClaudeSession {
                         openedFilesJson,
                         agentPrompt,
                         streaming,
+                        false,
                         handler
                 ).thenApply(result -> null)
                 .thenCompose(v -> {
@@ -991,16 +997,6 @@ public class ClaudeSession {
                         }
                         updateUserMessageUuids();
                     });
-                }).whenComplete((unused, throwable) -> {
-                    if (throwable == null
-                            && (previousSessionId == null || previousSessionId.isEmpty())
-                            && state.getSessionId() != null && !state.getSessionId().isEmpty()) {
-                        // Refill anonymous warm runtime after first turn captures a session ID,
-                        // so the next new chat can also hit a pre-warmed path.
-                        // NOTE: Idle anonymous runtimes are cleaned up by persistent-query-service's
-                        // cleanupStaleAnonymousRuntimes() (ANONYMOUS_RUNTIME_MAX_IDLE_MS = 10min).
-                        claudeSDKBridge.prewarmDaemonAsync(state.getCwd());
-                    }
                 });
     }
 
@@ -1016,15 +1012,19 @@ public class ClaudeSession {
     }
 
     private String resolveEffectivePermissionMode(String provider, String requestedMode, String sessionMode) {
-        // Codex execution is always bypassPermissions to match provider constraints.
-        if ("codex".equals(provider)) {
-            return "bypassPermissions";
+        String resolvedMode = requestedMode;
+        if (resolvedMode == null) {
+            resolvedMode = normalizeRequestedPermissionMode(sessionMode);
         }
-        if (requestedMode != null) {
-            return requestedMode;
+        if (resolvedMode == null) {
+            resolvedMode = "default";
         }
-        String normalizedSession = normalizeRequestedPermissionMode(sessionMode);
-        return normalizedSession != null ? normalizedSession : "default";
+
+        // Codex does not support plan execution yet; always fall back to default mode.
+        if ("codex".equals(provider) && "plan".equals(resolvedMode)) {
+            return "default";
+        }
+        return resolvedMode;
     }
 
     /**
@@ -1362,14 +1362,14 @@ public class ClaudeSession {
 
         // Sync PermissionManager mode with frontend mode:
         // - "default" -> DEFAULT (ask every time)
-        // - "acceptEdits" -> ACCEPT_EDITS (agent mode, auto-accept file edits)
+        // - "acceptEdits"/"autoEdit" -> ACCEPT_EDITS (agent mode, auto-accept file edits)
         // - "bypassPermissions" -> ALLOW_ALL (auto mode, bypass all permission checks)
         // - "plan" -> DENY_ALL (plan mode, not yet supported)
         PermissionManager.PermissionMode pmMode;
         if ("bypassPermissions".equals(mode)) {
             pmMode = PermissionManager.PermissionMode.ALLOW_ALL;
             LOG.info("Permission mode set to ALLOW_ALL for mode: " + mode);
-        } else if ("acceptEdits".equals(mode)) {
+        } else if ("acceptEdits".equals(mode) || "autoEdit".equals(mode)) {
             pmMode = PermissionManager.PermissionMode.ACCEPT_EDITS;
             LOG.info("Permission mode set to ACCEPT_EDITS for mode: " + mode);
         } else if ("plan".equals(mode)) {
@@ -1419,6 +1419,22 @@ public class ClaudeSession {
      */
     public String getProvider() {
         return state.getProvider();
+    }
+
+    /**
+     * Get the current runtime session epoch.
+     */
+    public String getRuntimeSessionEpoch() {
+        return state.getRuntimeSessionEpoch();
+    }
+
+    /**
+     * Rotate the runtime session epoch.
+     */
+    public String rotateRuntimeSessionEpoch() {
+        String epoch = state.rotateRuntimeSessionEpoch();
+        LOG.info("[Lifecycle] Rotated runtime session epoch to: " + epoch);
+        return epoch;
     }
 
     /**

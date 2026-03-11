@@ -314,6 +314,7 @@
       "emptyProvider": "暫無供應商配置",
       "notConfigured": "未配置",
       "apiKey": "API Key",
+      "apiKeyHelper": "API Key 助手",
       "baseUrl": "Base URL",
       "provider": "供應商",
       "source": "來源",
@@ -1124,9 +1125,9 @@
         "label": "gpt-5.3-codex",
         "description": "最新前沿智慧編程模型，能力全面增強"
       },
-      "gpt53": {
-        "label": "gpt-5.3",
-        "description": "最新前沿模型，性能顯著提升"
+      "gpt54": {
+        "label": "gpt-5.4",
+        "description": "最新前沿模型，能力進一步增強"
       },
       "gpt52codex": {
         "label": "gpt-5.2-codex",
@@ -1139,10 +1140,6 @@
       "gpt51codexMini": {
         "label": "gpt-5.1-codex-mini",
         "description": "針對Codex優化。更便宜、更快，但性能較差"
-      },
-      "gpt52": {
-        "label": "gpt-5.2",
-        "description": "最新前沿模型，知識儲備全面提升"
       }
     }
   },
@@ -1181,8 +1178,8 @@
     },
     "acceptEdits": {
       "label": "Auto Edit",
-      "tooltip": "Codex approval_policy=auto-edit – automatically applies file patches, still asks before shell commands.",
-      "description": "Auto-create and edit files via apply_patch while keeping command approvals."
+      "tooltip": "Codex approval_policy=on-request – asks for approval when needed",
+      "description": "Balanced option. Allows normal editing flow while still requiring approvals when needed."
     },
     "bypassPermissions": {
       "label": "Full Auto",

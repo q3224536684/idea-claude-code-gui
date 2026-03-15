@@ -254,8 +254,8 @@
     "codexPermissionsDesc": "管理 Codex 的权限和沙箱策略",
     "permissionsPanel": {
       "codexSandboxTitle": "Codex 沙箱模式",
-      "codexSandboxDesc": "控制 Codex 执行命令时的系统权限边界。推荐默认使用 workspace-write，仅在确有需要时开启 full access。",
-      "workspaceWriteTitle": "workspace-write（推荐）",
+      "codexSandboxDesc": "控制 Codex 执行命令时的系统权限边界。默认使用 danger-full-access，如需更严格的沙箱限制可切换为 workspace-write。",
+      "workspaceWriteTitle": "workspace-write",
       "workspaceWriteDesc": "只允许在工作区内读写，系统级操作会被限制，更安全。",
       "fullAccessTitle": "danger-full-access",
       "fullAccessDesc": "允许更高系统权限，可执行如 adb、docker 等需要额外权限的命令。",

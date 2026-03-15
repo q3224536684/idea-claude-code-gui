@@ -136,7 +136,7 @@ export function useSettingsBasicActions({
   const streamingEnabled = streamingEnabledProp ?? localStreamingEnabled;
 
   const [codexSandboxMode, setCodexSandboxMode] = useState<'workspace-write' | 'danger-full-access'>(
-    'workspace-write'
+    'danger-full-access'
   );
 
   // Send shortcut configuration - prefer props, fallback to local state

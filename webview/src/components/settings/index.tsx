@@ -109,6 +109,14 @@ const SettingsView = ({
     setWorkingDirectory,
     savingWorkingDirectory,
     setSavingWorkingDirectory,
+    proxyMode,
+    setProxyMode,
+    customProxyUrl,
+    setCustomProxyUrl,
+    noProxy,
+    setNoProxy,
+    savingProxyConfig,
+    setSavingProxyConfig,
     editorFontConfig,
     setEditorFontConfig,
     setLocalStreamingEnabled,
@@ -136,6 +144,7 @@ const SettingsView = ({
     setHistoryCompletionEnabled,
     handleSaveNodePath,
     handleSaveWorkingDirectory,
+    handleSaveProxyConfig,
     handleStreamingEnabledChange,
     handleCodexSandboxModeChange,
     handleSendShortcutChange,
@@ -251,6 +260,10 @@ const SettingsView = ({
     setSavingNodePath,
     setWorkingDirectory,
     setSavingWorkingDirectory,
+    setProxyMode,
+    setCustomProxyUrl,
+    setNoProxy,
+    setSavingProxyConfig,
     setCommitPrompt,
     setSavingCommitPrompt,
     setEditorFontConfig,
@@ -404,6 +417,14 @@ const SettingsView = ({
               onWorkingDirectoryChange={setWorkingDirectory}
               onSaveWorkingDirectory={handleSaveWorkingDirectory}
               savingWorkingDirectory={savingWorkingDirectory}
+              proxyMode={proxyMode}
+              onProxyModeChange={setProxyMode}
+              customProxyUrl={customProxyUrl}
+              onCustomProxyUrlChange={setCustomProxyUrl}
+              noProxy={noProxy}
+              onNoProxyChange={setNoProxy}
+              onSaveProxyConfig={handleSaveProxyConfig}
+              savingProxyConfig={savingProxyConfig}
               editorFontConfig={editorFontConfig}
               streamingEnabled={streamingEnabled}
               onStreamingEnabledChange={handleStreamingEnabledChange}

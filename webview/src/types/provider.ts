@@ -154,6 +154,15 @@ export interface CodexProviderConfig {
   customModels?: CodexCustomModel[];
 }
 
+export type ProxyMode = 'none' | 'ide' | 'custom';
+
+export interface ProxyConfig {
+  mode: ProxyMode;
+  customProxyUrl: string;
+  noProxy: string;
+  saved?: boolean;
+}
+
 // ============ Provider Presets ============
 
 /**

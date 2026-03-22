@@ -1,5 +1,7 @@
-package com.github.claudecodegui;
+package com.github.claudecodegui.action.editor;
 
+import com.github.claudecodegui.i18n.ClaudeCodeGuiBundle;
+import com.github.claudecodegui.ui.toolwindow.ClaudeSDKToolWindow;
 import com.intellij.openapi.actionSystem.ActionUpdateThread;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
@@ -18,8 +20,6 @@ import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.util.concurrency.AppExecutorUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.io.File;
 
 /**
  * Action that sends selected code to the plugin chat window.
@@ -241,4 +241,3 @@ public class SendSelectionToTerminalAction extends AnAction implements DumbAware
         }
     }
 }
-

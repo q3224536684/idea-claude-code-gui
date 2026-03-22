@@ -1,4 +1,4 @@
-package com.github.claudecodegui;
+package com.github.claudecodegui.session;
 
 /**
  * Session load service (singleton).

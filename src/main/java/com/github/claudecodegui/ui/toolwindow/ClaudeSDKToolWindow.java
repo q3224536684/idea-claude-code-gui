@@ -1,7 +1,9 @@
-package com.github.claudecodegui;
+package com.github.claudecodegui.ui.toolwindow;
 
+import com.github.claudecodegui.i18n.ClaudeCodeGuiBundle;
 import com.github.claudecodegui.settings.TabStateService;
 import com.github.claudecodegui.startup.BridgePreloader;
+import com.github.claudecodegui.ui.detached.DetachedWindowManager;
 import com.github.claudecodegui.util.PlatformUtils;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
@@ -112,14 +114,14 @@ public class ClaudeSDKToolWindow implements ToolWindowFactory, DumbAware {
      * Mark a Content as being detached (moving to a floating window).
      * This prevents the contentRemoved listener from disposing the associated ClaudeChatWindow.
      */
-    static void markContentAsDetaching(Content content) {
+    public static void markContentAsDetaching(Content content) {
         detachingContents.add(content);
     }
 
     /**
      * Remove the detaching mark from a Content after the detach operation is complete.
      */
-    static void unmarkContentAsDetaching(Content content) {
+    public static void unmarkContentAsDetaching(Content content) {
         detachingContents.remove(content);
     }
 

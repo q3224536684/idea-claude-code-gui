@@ -1,5 +1,6 @@
-package com.github.claudecodegui;
+package com.github.claudecodegui.ui.detached;
 
+import com.github.claudecodegui.ui.toolwindow.ClaudeChatWindow;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.NotNull;

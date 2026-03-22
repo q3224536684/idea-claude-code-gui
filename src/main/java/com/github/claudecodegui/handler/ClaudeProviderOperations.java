@@ -128,7 +128,7 @@ public class ClaudeProviderOperations {
         } catch (Exception e) {
             LOG.error("[ProviderHandler] Failed to add provider: " + e.getMessage(), e);
             ApplicationManager.getApplication().invokeLater(() -> {
-                context.callJavaScript("window.showError", context.escapeJs(com.github.claudecodegui.ClaudeCodeGuiBundle.message("provider.addFailed", e.getMessage())));
+                context.callJavaScript("window.showError", context.escapeJs(com.github.claudecodegui.i18n.ClaudeCodeGuiBundle.message("provider.addFailed", e.getMessage())));
             });
         }
     }
@@ -163,7 +163,7 @@ public class ClaudeProviderOperations {
         } catch (Exception e) {
             LOG.error("[ProviderHandler] Failed to update provider: " + e.getMessage(), e);
             ApplicationManager.getApplication().invokeLater(() -> {
-                context.callJavaScript("window.showError", context.escapeJs(com.github.claudecodegui.ClaudeCodeGuiBundle.message("provider.updateFailed", e.getMessage())));
+                context.callJavaScript("window.showError", context.escapeJs(com.github.claudecodegui.i18n.ClaudeCodeGuiBundle.message("provider.updateFailed", e.getMessage())));
             });
         }
     }
@@ -182,7 +182,7 @@ public class ClaudeProviderOperations {
             if (!data.has("id")) {
                 LOG.error("[ProviderHandler] ERROR: Missing 'id' field in request");
                 ApplicationManager.getApplication().invokeLater(() -> {
-                    context.callJavaScript("window.showError", context.escapeJs(com.github.claudecodegui.ClaudeCodeGuiBundle.message("provider.deleteMissingId")));
+                    context.callJavaScript("window.showError", context.escapeJs(com.github.claudecodegui.i18n.ClaudeCodeGuiBundle.message("provider.deleteMissingId")));
                 });
                 return;
             }
@@ -211,7 +211,7 @@ public class ClaudeProviderOperations {
         } catch (Exception e) {
             LOG.error("[ProviderHandler] Exception in handleDeleteProvider: " + e.getMessage(), e);
             ApplicationManager.getApplication().invokeLater(() -> {
-                context.callJavaScript("window.showError", context.escapeJs(com.github.claudecodegui.ClaudeCodeGuiBundle.message("provider.deleteFailed", e.getMessage())));
+                context.callJavaScript("window.showError", context.escapeJs(com.github.claudecodegui.i18n.ClaudeCodeGuiBundle.message("provider.deleteFailed", e.getMessage())));
             });
         }
 
@@ -231,7 +231,7 @@ public class ClaudeProviderOperations {
 
                 ApplicationManager.getApplication().invokeLater(() -> {
                     context.callJavaScript("window.showSwitchSuccess",
-                            context.escapeJs(com.github.claudecodegui.ClaudeCodeGuiBundle.message("toast.providerDisabled")));
+                            context.escapeJs(com.github.claudecodegui.i18n.ClaudeCodeGuiBundle.message("toast.providerDisabled")));
                     handleGetProviders();
                     handleGetActiveProvider();
                 });
@@ -245,7 +245,7 @@ public class ClaudeProviderOperations {
                     LOG.warn("[ProviderHandler] Local settings.json does not exist at: " + settingsPath);
                     ApplicationManager.getApplication().invokeLater(() -> {
                         context.callJavaScript("window.showError",
-                                context.escapeJs(com.github.claudecodegui.ClaudeCodeGuiBundle.message("error.localProviderSettingsNotFound")));
+                                context.escapeJs(com.github.claudecodegui.i18n.ClaudeCodeGuiBundle.message("error.localProviderSettingsNotFound")));
                     });
                     return;
                 }
@@ -258,7 +258,7 @@ public class ClaudeProviderOperations {
                     LOG.error("[ProviderHandler] Invalid JSON in settings.json: " + e.getMessage(), e);
                     ApplicationManager.getApplication().invokeLater(() -> {
                         context.callJavaScript("window.showError",
-                                context.escapeJs(com.github.claudecodegui.ClaudeCodeGuiBundle.message("error.localProviderInvalidJson", e.getMessage())));
+                                context.escapeJs(com.github.claudecodegui.i18n.ClaudeCodeGuiBundle.message("error.localProviderInvalidJson", e.getMessage())));
                     });
                     return;
                 }
@@ -277,7 +277,7 @@ public class ClaudeProviderOperations {
 
                 ApplicationManager.getApplication().invokeLater(() -> {
                     context.callJavaScript("window.showSwitchSuccess",
-                            context.escapeJs(com.github.claudecodegui.ClaudeCodeGuiBundle.message("toast.localProviderSwitchSuccess")));
+                            context.escapeJs(com.github.claudecodegui.i18n.ClaudeCodeGuiBundle.message("toast.localProviderSwitchSuccess")));
                     handleGetProviders();
                     handleGetActiveProvider();
                 });
@@ -288,14 +288,14 @@ public class ClaudeProviderOperations {
             context.getSettingsService().applyActiveProviderToClaudeSettings();
 
             ApplicationManager.getApplication().invokeLater(() -> {
-                context.callJavaScript("window.showSwitchSuccess", context.escapeJs(com.github.claudecodegui.ClaudeCodeGuiBundle.message("toast.providerSwitchSuccess") + com.github.claudecodegui.ClaudeCodeGuiBundle.message("provider.switchSyncClaude")));
+                context.callJavaScript("window.showSwitchSuccess", context.escapeJs(com.github.claudecodegui.i18n.ClaudeCodeGuiBundle.message("toast.providerSwitchSuccess") + com.github.claudecodegui.i18n.ClaudeCodeGuiBundle.message("provider.switchSyncClaude")));
                 handleGetProviders();
                 handleGetActiveProvider();
             });
         } catch (Exception e) {
             LOG.error("[ProviderHandler] Failed to switch provider: " + e.getMessage(), e);
             ApplicationManager.getApplication().invokeLater(() -> {
-                context.callJavaScript("window.showError", context.escapeJs(com.github.claudecodegui.ClaudeCodeGuiBundle.message("toast.providerSwitchFailed") + ": " + e.getMessage()));
+                context.callJavaScript("window.showError", context.escapeJs(com.github.claudecodegui.i18n.ClaudeCodeGuiBundle.message("toast.providerSwitchFailed") + ": " + e.getMessage()));
             });
         }
     }

@@ -1,6 +1,6 @@
 package com.github.claudecodegui.ui;
 
-import com.github.claudecodegui.ClaudeCodeGuiBundle;
+import com.github.claudecodegui.i18n.ClaudeCodeGuiBundle;
 import com.github.claudecodegui.bridge.NodeDetector;
 import com.github.claudecodegui.handler.HandlerContext;
 import com.github.claudecodegui.provider.claude.ClaudeSDKBridge;

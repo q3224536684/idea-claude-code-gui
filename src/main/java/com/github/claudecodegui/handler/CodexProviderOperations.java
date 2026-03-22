@@ -68,7 +68,7 @@ public class CodexProviderOperations {
         } catch (Exception e) {
             LOG.error("[ProviderHandler] Failed to add Codex provider: " + e.getMessage(), e);
             ApplicationManager.getApplication().invokeLater(() -> {
-                context.callJavaScript("window.showError", context.escapeJs(com.github.claudecodegui.ClaudeCodeGuiBundle.message("provider.addCodexFailed", e.getMessage())));
+                context.callJavaScript("window.showError", context.escapeJs(com.github.claudecodegui.i18n.ClaudeCodeGuiBundle.message("provider.addCodexFailed", e.getMessage())));
             });
         }
     }
@@ -103,7 +103,7 @@ public class CodexProviderOperations {
         } catch (Exception e) {
             LOG.error("[ProviderHandler] Failed to update Codex provider: " + e.getMessage(), e);
             ApplicationManager.getApplication().invokeLater(() -> {
-                context.callJavaScript("window.showError", context.escapeJs(com.github.claudecodegui.ClaudeCodeGuiBundle.message("provider.updateCodexFailed", e.getMessage())));
+                context.callJavaScript("window.showError", context.escapeJs(com.github.claudecodegui.i18n.ClaudeCodeGuiBundle.message("provider.updateCodexFailed", e.getMessage())));
             });
         }
     }
@@ -122,7 +122,7 @@ public class CodexProviderOperations {
             if (!data.has("id")) {
                 LOG.error("[ProviderHandler] ERROR: Missing 'id' field in request");
                 ApplicationManager.getApplication().invokeLater(() -> {
-                    context.callJavaScript("window.showError", context.escapeJs(com.github.claudecodegui.ClaudeCodeGuiBundle.message("provider.deleteCodexMissingId")));
+                    context.callJavaScript("window.showError", context.escapeJs(com.github.claudecodegui.i18n.ClaudeCodeGuiBundle.message("provider.deleteCodexMissingId")));
                 });
                 return;
             }
@@ -148,7 +148,7 @@ public class CodexProviderOperations {
         } catch (Exception e) {
             LOG.error("[ProviderHandler] Exception in handleDeleteCodexProvider: " + e.getMessage(), e);
             ApplicationManager.getApplication().invokeLater(() -> {
-                context.callJavaScript("window.showError", context.escapeJs(com.github.claudecodegui.ClaudeCodeGuiBundle.message("provider.deleteCodexFailed", e.getMessage())));
+                context.callJavaScript("window.showError", context.escapeJs(com.github.claudecodegui.i18n.ClaudeCodeGuiBundle.message("provider.deleteCodexFailed", e.getMessage())));
             });
         }
 
@@ -167,7 +167,7 @@ public class CodexProviderOperations {
             context.getSettingsService().applyActiveProviderToCodexSettings();
 
             ApplicationManager.getApplication().invokeLater(() -> {
-                context.callJavaScript("window.showSwitchSuccess", context.escapeJs(com.github.claudecodegui.ClaudeCodeGuiBundle.message("toast.providerSwitchSuccess") + com.github.claudecodegui.ClaudeCodeGuiBundle.message("provider.switchSyncCodex")));
+                context.callJavaScript("window.showSwitchSuccess", context.escapeJs(com.github.claudecodegui.i18n.ClaudeCodeGuiBundle.message("toast.providerSwitchSuccess") + com.github.claudecodegui.i18n.ClaudeCodeGuiBundle.message("provider.switchSyncCodex")));
                 handleGetCodexProviders(); // Refresh provider list
                 handleGetCurrentCodexConfig(); // Refresh Codex CLI config display
                 handleGetActiveCodexProvider(); // Refresh active provider config
@@ -175,7 +175,7 @@ public class CodexProviderOperations {
         } catch (Exception e) {
             LOG.error("[ProviderHandler] Failed to switch Codex provider: " + e.getMessage(), e);
             ApplicationManager.getApplication().invokeLater(() -> {
-                context.callJavaScript("window.showError", context.escapeJs(com.github.claudecodegui.ClaudeCodeGuiBundle.message("toast.providerSwitchFailed") + ": " + e.getMessage()));
+                context.callJavaScript("window.showError", context.escapeJs(com.github.claudecodegui.i18n.ClaudeCodeGuiBundle.message("toast.providerSwitchFailed") + ": " + e.getMessage()));
             });
         }
     }

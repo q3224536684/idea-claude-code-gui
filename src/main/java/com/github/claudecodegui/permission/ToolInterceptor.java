@@ -1,8 +1,6 @@
-package com.github.claudecodegui;
+package com.github.claudecodegui.permission;
 
 import com.google.gson.*;
-import com.github.claudecodegui.permission.PermissionDialog;
-import com.github.claudecodegui.permission.PermissionRequest;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;

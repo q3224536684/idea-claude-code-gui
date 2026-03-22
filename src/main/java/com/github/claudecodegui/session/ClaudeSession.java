@@ -1,15 +1,9 @@
-package com.github.claudecodegui;
+package com.github.claudecodegui.session;
 
 import com.github.claudecodegui.permission.PermissionManager;
 import com.github.claudecodegui.permission.PermissionRequest;
 import com.github.claudecodegui.provider.claude.ClaudeSDKBridge;
 import com.github.claudecodegui.provider.codex.CodexSDKBridge;
-import com.github.claudecodegui.session.SessionContextService;
-import com.github.claudecodegui.session.SessionCallbackFacade;
-import com.github.claudecodegui.session.SessionMessageOrchestrator;
-import com.github.claudecodegui.session.SessionProviderRouter;
-import com.github.claudecodegui.session.SessionSendService;
-import com.github.claudecodegui.session.SessionState;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.intellij.openapi.diagnostic.Logger;

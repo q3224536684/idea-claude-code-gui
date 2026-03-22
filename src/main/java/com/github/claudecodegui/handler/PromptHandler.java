@@ -1,6 +1,6 @@
 package com.github.claudecodegui.handler;
 
-import com.github.claudecodegui.CodemossSettingsService;
+import com.github.claudecodegui.settings.CodemossSettingsService;
 import com.github.claudecodegui.model.ConflictStrategy;
 import com.github.claudecodegui.model.PromptScope;
 import com.github.claudecodegui.settings.AbstractPromptManager;

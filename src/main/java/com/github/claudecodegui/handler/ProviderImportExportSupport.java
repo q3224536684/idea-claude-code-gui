@@ -50,9 +50,9 @@ public class ProviderImportExportSupport {
             LOG.info("[ProviderHandler] Database file exists: " + dbFile.exists());
 
             if (!dbFile.exists()) {
-                String errorMsg = com.github.claudecodegui.ClaudeCodeGuiBundle.message("provider.ccswitch.notFound", dbFile.getAbsolutePath());
+                String errorMsg = com.github.claudecodegui.i18n.ClaudeCodeGuiBundle.message("provider.ccswitch.notFound", dbFile.getAbsolutePath());
                 LOG.error("[ProviderHandler] " + errorMsg);
-                sendErrorToFrontend(com.github.claudecodegui.ClaudeCodeGuiBundle.message("provider.ccswitch.notFoundTitle"), errorMsg);
+                sendErrorToFrontend(com.github.claudecodegui.i18n.ClaudeCodeGuiBundle.message("provider.ccswitch.notFoundTitle"), errorMsg);
                 return;
             }
 
@@ -63,7 +63,7 @@ public class ProviderImportExportSupport {
 
                     if (providers.isEmpty()) {
                         LOG.info("[ProviderHandler] No Claude provider configs found in database");
-                        sendInfoToFrontend(com.github.claudecodegui.ClaudeCodeGuiBundle.message("provider.ccswitch.noDataTitle"), com.github.claudecodegui.ClaudeCodeGuiBundle.message("provider.ccswitch.noData"));
+                        sendInfoToFrontend(com.github.claudecodegui.i18n.ClaudeCodeGuiBundle.message("provider.ccswitch.noDataTitle"), com.github.claudecodegui.i18n.ClaudeCodeGuiBundle.message("provider.ccswitch.noData"));
                         return;
                     }
 
@@ -80,9 +80,9 @@ public class ProviderImportExportSupport {
                     context.callJavaScript("window.import_preview_result", context.escapeJs(jsonStr));
 
                 } catch (Exception e) {
-                    String errorDetails = com.github.claudecodegui.ClaudeCodeGuiBundle.message("provider.ccswitch.readFailed") + ": " + e.getMessage();
+                    String errorDetails = com.github.claudecodegui.i18n.ClaudeCodeGuiBundle.message("provider.ccswitch.readFailed") + ": " + e.getMessage();
                     LOG.error("[ProviderHandler] " + errorDetails, e);
-                    sendErrorToFrontend(com.github.claudecodegui.ClaudeCodeGuiBundle.message("provider.ccswitch.readFailedTitle"), errorDetails);
+                    sendErrorToFrontend(com.github.claudecodegui.i18n.ClaudeCodeGuiBundle.message("provider.ccswitch.readFailedTitle"), errorDetails);
                 }
             });
         });
@@ -103,8 +103,8 @@ public class ProviderImportExportSupport {
                         false   // chooseMultiple
                 );
 
-                descriptor.setTitle(com.github.claudecodegui.ClaudeCodeGuiBundle.message("provider.ccswitch.selectTitle"));
-                descriptor.setDescription(com.github.claudecodegui.ClaudeCodeGuiBundle.message("provider.ccswitch.selectDesc"));
+                descriptor.setTitle(com.github.claudecodegui.i18n.ClaudeCodeGuiBundle.message("provider.ccswitch.selectTitle"));
+                descriptor.setDescription(com.github.claudecodegui.i18n.ClaudeCodeGuiBundle.message("provider.ccswitch.selectDesc"));
                 descriptor.withFileFilter(file -> {
                     String name = file.getName().toLowerCase();
                     return name.endsWith(".db");
@@ -131,7 +131,7 @@ public class ProviderImportExportSupport {
 
                 if (selectedFiles.length == 0) {
                     LOG.info("[ProviderHandler] User cancelled file selection");
-                    sendInfoToFrontend(com.github.claudecodegui.ClaudeCodeGuiBundle.message("provider.ccswitch.cancelledTitle"), com.github.claudecodegui.ClaudeCodeGuiBundle.message("provider.ccswitch.cancelled"));
+                    sendInfoToFrontend(com.github.claudecodegui.i18n.ClaudeCodeGuiBundle.message("provider.ccswitch.cancelledTitle"), com.github.claudecodegui.i18n.ClaudeCodeGuiBundle.message("provider.ccswitch.cancelled"));
                     return;
                 }
 
@@ -143,18 +143,18 @@ public class ProviderImportExportSupport {
                 LOG.info("[ProviderHandler] Database file exists: " + dbFile.exists());
 
                 if (!dbFile.exists()) {
-                    String errorMsg = com.github.claudecodegui.ClaudeCodeGuiBundle.message("provider.ccswitch.notFound", dbFile.getAbsolutePath());
+                    String errorMsg = com.github.claudecodegui.i18n.ClaudeCodeGuiBundle.message("provider.ccswitch.notFound", dbFile.getAbsolutePath());
                     LOG.error("[ProviderHandler] " + errorMsg);
-                    sendErrorToFrontend(com.github.claudecodegui.ClaudeCodeGuiBundle.message("provider.ccswitch.notFoundTitle"), errorMsg);
+                    sendErrorToFrontend(com.github.claudecodegui.i18n.ClaudeCodeGuiBundle.message("provider.ccswitch.notFoundTitle"), errorMsg);
                     return;
                 }
 
                 if (!dbFile.canRead()) {
-                    String errorMsg = com.github.claudecodegui.ClaudeCodeGuiBundle.message("error.cannotReadFile") + "\n" +
+                    String errorMsg = com.github.claudecodegui.i18n.ClaudeCodeGuiBundle.message("error.cannotReadFile") + "\n" +
                                               dbFile.getAbsolutePath() + "\n" +
-                                              com.github.claudecodegui.ClaudeCodeGuiBundle.message("error.checkFilePermissions");
+                                              com.github.claudecodegui.i18n.ClaudeCodeGuiBundle.message("error.checkFilePermissions");
                     LOG.error("[ProviderHandler] " + errorMsg);
-                    sendErrorToFrontend(com.github.claudecodegui.ClaudeCodeGuiBundle.message("provider.ccswitch.permissionErrorTitle"), errorMsg);
+                    sendErrorToFrontend(com.github.claudecodegui.i18n.ClaudeCodeGuiBundle.message("provider.ccswitch.permissionErrorTitle"), errorMsg);
                     return;
                 }
 
@@ -166,7 +166,7 @@ public class ProviderImportExportSupport {
 
                         if (providers.isEmpty()) {
                             LOG.info("[ProviderHandler] No Claude provider configs found in database");
-                            sendInfoToFrontend(com.github.claudecodegui.ClaudeCodeGuiBundle.message("provider.ccswitch.noDataTitle"), com.github.claudecodegui.ClaudeCodeGuiBundle.message("provider.ccswitch.noData"));
+                            sendInfoToFrontend(com.github.claudecodegui.i18n.ClaudeCodeGuiBundle.message("provider.ccswitch.noDataTitle"), com.github.claudecodegui.i18n.ClaudeCodeGuiBundle.message("provider.ccswitch.noData"));
                             return;
                         }
 
@@ -183,16 +183,16 @@ public class ProviderImportExportSupport {
                         context.callJavaScript("window.import_preview_result", context.escapeJs(jsonStr));
 
                     } catch (Exception e) {
-                        String errorDetails = com.github.claudecodegui.ClaudeCodeGuiBundle.message("provider.ccswitch.readFailed") + ": " + e.getMessage();
+                        String errorDetails = com.github.claudecodegui.i18n.ClaudeCodeGuiBundle.message("provider.ccswitch.readFailed") + ": " + e.getMessage();
                         LOG.error("[ProviderHandler] " + errorDetails, e);
-                        sendErrorToFrontend(com.github.claudecodegui.ClaudeCodeGuiBundle.message("provider.ccswitch.readFailedTitle"), errorDetails);
+                        sendErrorToFrontend(com.github.claudecodegui.i18n.ClaudeCodeGuiBundle.message("provider.ccswitch.readFailedTitle"), errorDetails);
                     }
                 });
 
             } catch (Exception e) {
-                String errorDetails = com.github.claudecodegui.ClaudeCodeGuiBundle.message("provider.ccswitch.fileChooserFailed") + ": " + e.getMessage();
+                String errorDetails = com.github.claudecodegui.i18n.ClaudeCodeGuiBundle.message("provider.ccswitch.fileChooserFailed") + ": " + e.getMessage();
                 LOG.error("[ProviderHandler] " + errorDetails, e);
-                sendErrorToFrontend(com.github.claudecodegui.ClaudeCodeGuiBundle.message("provider.ccswitch.fileChooserFailedTitle"), errorDetails);
+                sendErrorToFrontend(com.github.claudecodegui.i18n.ClaudeCodeGuiBundle.message("provider.ccswitch.fileChooserFailedTitle"), errorDetails);
             }
         });
     }
@@ -221,12 +221,12 @@ public class ProviderImportExportSupport {
 
                 ApplicationManager.getApplication().invokeLater(() -> {
                     claudeOps.handleGetProviders(); // Refresh UI
-                    sendInfoToFrontend(com.github.claudecodegui.ClaudeCodeGuiBundle.message("provider.ccswitch.importSuccessTitle"), com.github.claudecodegui.ClaudeCodeGuiBundle.message("provider.ccswitch.importSuccess", count));
+                    sendInfoToFrontend(com.github.claudecodegui.i18n.ClaudeCodeGuiBundle.message("provider.ccswitch.importSuccessTitle"), com.github.claudecodegui.i18n.ClaudeCodeGuiBundle.message("provider.ccswitch.importSuccess", count));
                 });
 
             } catch (Exception e) {
                 LOG.error("Failed to save imported providers", e);
-                sendErrorToFrontend(com.github.claudecodegui.ClaudeCodeGuiBundle.message("provider.ccswitch.saveFailedTitle"), e.getMessage());
+                sendErrorToFrontend(com.github.claudecodegui.i18n.ClaudeCodeGuiBundle.message("provider.ccswitch.saveFailedTitle"), e.getMessage());
             }
         });
     }

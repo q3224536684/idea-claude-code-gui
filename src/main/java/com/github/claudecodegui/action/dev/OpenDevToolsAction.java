@@ -1,5 +1,6 @@
-package com.github.claudecodegui;
+package com.github.claudecodegui.action.dev;
 
+import com.github.claudecodegui.i18n.ClaudeCodeGuiBundle;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;

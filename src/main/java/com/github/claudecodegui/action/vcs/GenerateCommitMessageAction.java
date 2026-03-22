@@ -1,5 +1,6 @@
-package com.github.claudecodegui;
+package com.github.claudecodegui.action.vcs;
 
+import com.github.claudecodegui.i18n.ClaudeCodeGuiBundle;
 import com.github.claudecodegui.notifications.ClaudeNotifier;
 import com.github.claudecodegui.service.GitCommitMessageService;
 import com.intellij.openapi.actionSystem.ActionUpdateThread;

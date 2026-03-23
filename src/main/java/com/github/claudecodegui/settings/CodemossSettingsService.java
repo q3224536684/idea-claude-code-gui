@@ -1,6 +1,6 @@
 package com.github.claudecodegui.settings;
 
-import com.github.claudecodegui.ClaudeCodeGuiBundle;
+import com.github.claudecodegui.i18n.ClaudeCodeGuiBundle;
 import com.github.claudecodegui.model.ConflictStrategy;
 import com.github.claudecodegui.model.DeleteResult;
 import com.github.claudecodegui.model.PromptScope;
@@ -242,7 +242,7 @@ public class CodemossSettingsService {
         JsonObject claude = new JsonObject();
         JsonObject providers = new JsonObject();
 
-        claude.addProperty("current", ProviderManager.LOCAL_SETTINGS_PROVIDER_ID);
+        claude.addProperty("current", "");
         claude.add("providers", providers);
         config.add("claude", claude);
         config.add("proxy", createDefaultProxyConfig());
@@ -376,6 +376,10 @@ public class CodemossSettingsService {
         }
 
         return currentConfig;
+    }
+
+    public JsonObject readClaudeSettings() throws IOException {
+        return claudeSettingsManager.readClaudeSettings();
     }
 
     public Boolean getAlwaysThinkingEnabledFromClaudeSettings() throws IOException {
@@ -670,6 +674,10 @@ public class CodemossSettingsService {
 
     public void switchClaudeProvider(String id) throws IOException {
         providerManager.switchClaudeProvider(id);
+    }
+
+    public void deactivateClaudeProvider() throws IOException {
+        providerManager.deactivateClaudeProvider();
     }
 
     public List<JsonObject> parseProvidersFromCcSwitchDb(String dbPath) throws IOException {

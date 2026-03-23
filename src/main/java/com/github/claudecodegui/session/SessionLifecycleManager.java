@@ -1,8 +1,7 @@
 package com.github.claudecodegui.session;
 
-import com.github.claudecodegui.ClaudeCodeGuiBundle;
-import com.github.claudecodegui.ClaudeSession;
-import com.github.claudecodegui.handler.HandlerContext;
+import com.github.claudecodegui.i18n.ClaudeCodeGuiBundle;
+import com.github.claudecodegui.handler.core.HandlerContext;
 import com.github.claudecodegui.handler.SettingsHandler;
 import com.github.claudecodegui.provider.claude.ClaudeSDKBridge;
 import com.github.claudecodegui.provider.codex.CodexSDKBridge;

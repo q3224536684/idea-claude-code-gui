@@ -1,6 +1,7 @@
 package com.github.claudecodegui.handler;
 
-import com.github.claudecodegui.ClaudeSession;
+import com.github.claudecodegui.handler.core.HandlerContext;
+import com.github.claudecodegui.session.ClaudeSession;
 import com.github.claudecodegui.settings.CodemossSettingsService;
 import com.github.claudecodegui.util.TokenUsageUtils;
 import com.github.claudecodegui.util.EditorFileUtils;

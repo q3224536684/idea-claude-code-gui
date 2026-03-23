@@ -1,6 +1,6 @@
 package com.github.claudecodegui.bridge;
 
-import com.github.claudecodegui.CodemossSettingsService;
+import com.github.claudecodegui.settings.CodemossSettingsService;
 import com.github.claudecodegui.util.PlatformUtils;
 import com.github.claudecodegui.util.ShellExecutor;
 import com.google.gson.JsonObject;

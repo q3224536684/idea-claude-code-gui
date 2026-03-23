@@ -1,5 +1,6 @@
 package com.github.claudecodegui.handler;
 
+import com.github.claudecodegui.settings.CodemossSettingsService;
 import com.github.claudecodegui.skill.SlashCommandRegistry;
 import com.github.claudecodegui.util.EditorFileUtils;
 import com.google.gson.Gson;
@@ -231,8 +232,7 @@ public class ModelProviderHandler {
      */
     private String resolveActualModelName(String baseModel) {
         try {
-            com.github.claudecodegui.CodemossSettingsService settingsService =
-                new com.github.claudecodegui.CodemossSettingsService();
+            CodemossSettingsService settingsService = new CodemossSettingsService();
             com.google.gson.JsonObject config = settingsService.readConfig();
 
             if (config == null || !config.has("activeProvider")) {

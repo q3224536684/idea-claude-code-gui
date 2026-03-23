@@ -1,6 +1,6 @@
 package com.github.claudecodegui.util;
 
-import com.github.claudecodegui.CodemossSettingsService;
+import com.github.claudecodegui.settings.CodemossSettingsService;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import javazoom.jl.decoder.JavaLayerException;

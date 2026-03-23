@@ -5,11 +5,11 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import com.github.claudecodegui.ClaudeSession;
-import com.github.claudecodegui.CodemossSettingsService;
 import com.github.claudecodegui.dependency.DependencyManager;
 import com.github.claudecodegui.provider.common.BaseSDKBridge;
 import com.github.claudecodegui.provider.common.MessageCallback;
 import com.github.claudecodegui.provider.common.SDKResult;
+import com.github.claudecodegui.settings.CodemossSettingsService;
 import com.github.claudecodegui.util.PlatformUtils;
 
 import java.io.BufferedReader;

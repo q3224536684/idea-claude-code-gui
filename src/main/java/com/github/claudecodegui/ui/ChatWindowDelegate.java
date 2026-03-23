@@ -2,7 +2,6 @@ package com.github.claudecodegui.ui;
 
 import com.github.claudecodegui.ClaudeCodeGuiBundle;
 import com.github.claudecodegui.ClaudeSession;
-import com.github.claudecodegui.CodemossSettingsService;
 import com.github.claudecodegui.handler.AgentHandler;
 import com.github.claudecodegui.handler.ClipboardHandler;
 import com.github.claudecodegui.handler.CodexMcpServerHandler;
@@ -32,6 +31,7 @@ import com.github.claudecodegui.provider.common.MessageCallback;
 import com.github.claudecodegui.provider.common.SDKResult;
 import com.github.claudecodegui.session.SessionLifecycleManager;
 import com.github.claudecodegui.session.StreamMessageCoalescer;
+import com.github.claudecodegui.settings.CodemossSettingsService;
 import com.github.claudecodegui.util.JsUtils;
 import com.google.gson.JsonObject;
 import com.intellij.ide.util.PropertiesComponent;

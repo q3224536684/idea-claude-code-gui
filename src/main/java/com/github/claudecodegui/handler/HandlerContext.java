@@ -3,7 +3,7 @@ package com.github.claudecodegui.handler;
 import com.github.claudecodegui.ClaudeSession;
 import com.github.claudecodegui.provider.claude.ClaudeSDKBridge;
 import com.github.claudecodegui.provider.codex.CodexSDKBridge;
-import com.github.claudecodegui.CodemossSettingsService;
+import com.github.claudecodegui.settings.CodemossSettingsService;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.ui.jcef.JBCefBrowser;

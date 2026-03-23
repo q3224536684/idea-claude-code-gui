@@ -12,6 +12,7 @@ import com.github.claudecodegui.provider.common.MessageCallback;
 import com.github.claudecodegui.session.SessionCallbackAdapter;
 import com.github.claudecodegui.session.SessionLifecycleManager;
 import com.github.claudecodegui.session.StreamMessageCoalescer;
+import com.github.claudecodegui.settings.CodemossSettingsService;
 import com.github.claudecodegui.ui.ChatWindowDelegate;
 import com.github.claudecodegui.ui.EditorContextTracker;
 import com.github.claudecodegui.ui.WebviewInitializer;
